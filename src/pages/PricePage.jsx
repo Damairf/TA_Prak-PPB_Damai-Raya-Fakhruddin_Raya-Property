@@ -46,6 +46,7 @@ const PricePage = () => {
             title={hemat.nama}
             img={House1}
             price={hemat.harga}
+            deskripsi={hemat.deskripsi}
             maxFeatures={9}
             features={hemat.fasilitas || []}
           />
@@ -57,6 +58,7 @@ const PricePage = () => {
             title={eksklusif.nama}
             img={House2}
             price={eksklusif.harga}
+            deskripsi={eksklusif.deskripsi}
             maxFeatures={9}
             features={eksklusif.fasilitas || []}
           />

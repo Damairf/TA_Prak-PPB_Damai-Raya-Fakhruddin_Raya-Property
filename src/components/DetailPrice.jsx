@@ -32,7 +32,6 @@ const DetailPrice = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-
       <button
         onClick={() => navigate("/price")}
         className="mb-4 bg-blue-900 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-blue-800 transition"
@@ -51,17 +50,21 @@ const DetailPrice = () => {
       <div className="text-black">
         <h2 className="text-2xl font-bold mb-3">{data?.nama}</h2>
 
-        <h3 className="font-semibold text-lg mt-4 mb-2">Fasilitas:</h3>
+        {data?.deskripsi && (
+          <p className="text-gray-700 text-base leading-relaxed mb-4">
+            {data.deskripsi}
+          </p>
+        )}
+
+        <h3 className="font-semibold text-xl mt-4 mb-2">Fasilitas:</h3>
         <ul className="list-disc list-inside text-gray-700 leading-relaxed">
-          {data?.fasilitas?.map((f, i) => (
+          {data?.fasilitas_detail?.map((f, i) => (
             <li key={i}>{f}</li>
           ))}
         </ul>
 
-        <h3 className="font-semibold text-lg mt-4">Harga:</h3>
-        <p className="text-yellow-600 text-xl font-bold">
-          Rp. {data?.harga}
-        </p>
+        <h3 className="font-semibold text-xl mt-4 mb-2">Harga:</h3>
+        <p className="text-yellow-600 text-xl font-bold">Rp. {data?.harga}</p>
       </div>
     </div>
   );
