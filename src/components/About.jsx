@@ -102,7 +102,7 @@ const About = () => {
               href="https://www.instagram.com/damairf?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
               target="_blank"
               rel="noreferrer"
-              className="flex items-center justify-between bg-white text-blue-900 px-4 py-3 rounded-xl shadow-md"
+              className="flex items-center justify-between bg-white text-blue-800 px-4 py-3 rounded-xl shadow-md"
             >
               <div>
                 <p className="text-lg font-bold">Instagram</p>
