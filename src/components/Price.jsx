@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const Price = ({ title, img, features, price, maxFeatures = 10 }) => {
+const Price = ({ title, img, features, price, maxFeatures = 10, id }) => {
+  const navigate = useNavigate();
+
   const normalizedFeatures = [
     ...features,
     ...Array(Math.max(0, maxFeatures - features.length)).fill(""),
@@ -24,8 +27,16 @@ const Price = ({ title, img, features, price, maxFeatures = 10 }) => {
       </ul>
 
       <p className="mt-4 text-xl font-semibold">
-        Harga: <span className="text-yellow-300">{price}</span>
+        Harga: <span className="text-yellow-300">Rp. {price}</span>
       </p>
+
+      <button
+        onClick={() => navigate(`/detail-price/${id}`)}
+        className="mt-5 bg-white text-blue-900 font-semibold py-2 rounded-lg 
+                   hover:bg-gray-200 active:scale-95 transition"
+      >
+        Lihat Detail
+      </button>
     </div>
   );
 };

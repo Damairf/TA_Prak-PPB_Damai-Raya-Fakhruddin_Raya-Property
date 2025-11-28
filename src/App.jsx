@@ -8,6 +8,7 @@ import AboutPage from "./pages/AboutPage";
 import PortofolioPage from "./pages/PortofolioPage";
 import PricePage from "./pages/PricePage";
 import DetailPage from "./pages/DetailPage";
+import DetailPricePage from "./pages/DetailPricePage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/price" element={<PricePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/detail/:id" element={<DetailPage />} />
+          <Route path="/detail-price/:id" element={<DetailPricePage />} />
         </Routes>
       </div>
 
