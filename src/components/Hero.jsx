@@ -71,15 +71,15 @@ const Hero = () => {
             src={Banner}
             alt="Banner Ryon Property"
             className="
-              /* --- MOBILE (lebih besar) --- */
-              w-96              /* default mobile */
+              /* --- MOBILE --- */
+              w-96
               xs:w-96 
-              sm:w-[420px]      /* besar tetapi tidak keteteran */
-              translate-y-0     /* mobile tetap center */
+              sm:w-[420px]
+              translate-y-0
 
               /* --- DESKTOP --- */
               md:w-[1127px]
-              md:translate-y-10 /* sesuai posisi lama */
+              md:translate-y-10
 
               /* General */
               max-w-[90%]
