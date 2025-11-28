@@ -10,10 +10,14 @@ import PricePage from "./pages/PricePage";
 import DetailPage from "./pages/DetailPage";
 import DetailPricePage from "./pages/DetailPricePage";
 
+import ScrollToTop from "./components/ScrollToTop";
+
 function App() {
   return (
     <div className="font-sans text-gray-800 min-h-screen flex flex-col">
       <Navbar />
+
+      <ScrollToTop />
 
       <div className="flex-grow">
         <Routes>
