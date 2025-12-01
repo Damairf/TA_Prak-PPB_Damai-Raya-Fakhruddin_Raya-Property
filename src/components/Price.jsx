@@ -1,7 +1,6 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Price = ({ title, img, features, price, maxFeatures = 10, id }) => {
+const Price = ({ title, features, price, maxFeatures = 10, id, image_url }) => {
   const navigate = useNavigate();
 
   const normalizedFeatures = [
@@ -13,7 +12,11 @@ const Price = ({ title, img, features, price, maxFeatures = 10, id }) => {
     <div className="bg-blue-900 text-white rounded-xl shadow-lg p-5 w-full md:w-[450px] h-full flex flex-col">
 
       <div className="w-full h-[230px] rounded-xl overflow-hidden">
-        <img src={img} alt={title} className="w-full h-full object-cover" />
+        <img
+          src={image_url}
+          alt={title}
+          className="w-full h-full object-cover"
+        />
       </div>
 
       <h2 className="text-2xl font-bold mt-4">{title}</h2>

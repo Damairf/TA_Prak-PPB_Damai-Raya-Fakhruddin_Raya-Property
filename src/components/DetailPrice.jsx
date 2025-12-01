@@ -2,14 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 
-import House1 from "../assets/slider4.jpg";
-import House2 from "../assets/slider3.jpg";
-
-const imgMap = {
-  1: House1,
-  2: House2,
-};
-
 const DetailPrice = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -41,7 +33,7 @@ const DetailPrice = () => {
 
       <div className="bg-blue-900 p-4 rounded-2xl shadow-xl mb-6">
         <img
-          src={imgMap[id]}
+          src={data?.image_url}
           alt={data?.nama || ""}
           className="w-full h-64 md:h-80 object-cover rounded-xl"
         />
