@@ -3,42 +3,48 @@ import Price from "../components/Price";
 import { supabase } from "../supabaseClient";
 
 const PricePage = () => {
-  const [hemat, setHemat] = useState(null);
-  const [eksklusif, setEksklusif] = useState(null);
+  const [paketList, setPaketList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
 
   useEffect(() => {
     const fetchData = async () => {
       const { data, error } = await supabase
         .from("detail_price")
         .select("*")
-        .in("id", [1, 2]);
+        .order("id", { ascending: false });
 
       if (error) {
         console.error("Error fetching price data:", error);
         return;
       }
 
-      data.forEach((item) => {
-        if (item.id === 1) setHemat(item);
-        if (item.id === 2) setEksklusif(item);
-      });
+      setPaketList(data);
     };
 
     fetchData();
   }, []);
 
-  if (!hemat || !eksklusif) return null;
-
-  // 🔍 Filter berdasarkan title (nama paket)
-  const paketList = [
-    { key: "hemat", data: hemat },
-    { key: "eksklusif", data: eksklusif },
-  ];
+  if (paketList.length === 0) return null;
 
   const filteredPaket = paketList.filter((p) =>
-    p.data.nama.toLowerCase().includes(searchTerm.toLowerCase())
+    p.nama.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const totalPages = Math.ceil(filteredPaket.length / itemsPerPage);
+  const indexStart = (currentPage - 1) * itemsPerPage;
+  const indexEnd = indexStart + itemsPerPage;
+  const paginatedData = filteredPaket.slice(indexStart, indexEnd);
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
 
   return (
     <div className="md:pt-32 pt-8 md:pb-16 pb-24 px-5 md:px-20 bg-white">
@@ -46,13 +52,15 @@ const PricePage = () => {
         Daftar Harga
       </h1>
 
-      {/* 🔍 SEARCH BAR */}
       <div className="flex justify-center mb-8">
         <input
           type="text"
           placeholder="Cari hunian..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
           className="
             w-full max-w-3xl p-3 rounded-xl text-black 
             outline-none border border-gray-400 
@@ -61,19 +69,18 @@ const PricePage = () => {
         />
       </div>
 
-      {/* Card Harga */}
-      <div className="flex flex-col md:flex-row items-stretch justify-center gap-10">
-        {filteredPaket.length > 0 ? (
-          filteredPaket.map((paket) => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 place-items-center">
+        {paginatedData.length > 0 ? (
+          paginatedData.map((paket) => (
             <Price
-              key={paket.data.id}
-              id={paket.data.id}
-              title={paket.data.nama}
-              image_url={paket.data.image_url}
-              price={paket.data.harga}
-              deskripsi={paket.data.deskripsi}
+              key={paket.id}
+              id={paket.id}
+              title={paket.nama}
+              image_url={paket.image_url}
+              price={paket.harga}
+              deskripsi={paket.deskripsi}
               maxFeatures={9}
-              features={paket.data.fasilitas || []}
+              features={paket.fasilitas || []}
             />
           ))
         ) : (
@@ -82,6 +89,30 @@ const PricePage = () => {
           </p>
         )}
       </div>
+
+      {filteredPaket.length > 3 && (
+        <div className="flex justify-center gap-3 mt-10">
+          <button
+            disabled={currentPage === 1}
+            onClick={handlePrev}
+            className="px-4 py-2 bg-blue-900 text-white rounded-lg disabled:opacity-40"
+          >
+            Prev
+          </button>
+
+          <div className="px-4 py-2 font-semibold">
+            Halaman {currentPage} / {totalPages}
+          </div>
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={handleNext}
+            className="px-4 py-2 bg-blue-900 text-white rounded-lg disabled:opacity-40"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
