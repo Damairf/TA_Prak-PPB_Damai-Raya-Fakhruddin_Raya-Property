@@ -27,6 +27,13 @@ const PricePage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
+  }, [currentPage]);
+
   if (paketList.length === 0) return null;
 
   const filteredPaket = paketList.filter((p) =>

@@ -27,13 +27,23 @@ const AdminEditPage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
+  }, [currentPage]);
+
   const filteredList = list.filter((item) =>
     item.nama.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredList.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentItems = filteredList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const currentItems = filteredList.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
 
   const handleNext = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
@@ -45,7 +55,6 @@ const AdminEditPage = () => {
 
   return (
     <div className="md:pt-14 pt-10 px-6 pb-12">
-
       <h1 className="text-4xl font-bold text-center text-blue-900">
         Edit Data Hunian
       </h1>
@@ -118,24 +127,24 @@ const AdminEditPage = () => {
 
       <div className="flex justify-center mt-10 space-x-2">
         <button
-            disabled={currentPage === 1}
-            onClick={handlePrev}
-            className="px-4 py-2 bg-blue-900 text-white rounded-lg disabled:opacity-40"
-          >
-            Prev
-          </button>
+          disabled={currentPage === 1}
+          onClick={handlePrev}
+          className="px-4 py-2 bg-blue-900 text-white rounded-lg disabled:opacity-40"
+        >
+          Prev
+        </button>
 
-          <div className="px-4 py-2 font-semibold">
-            Halaman {currentPage} / {totalPages}
-          </div>
+        <div className="px-4 py-2 font-semibold">
+          Halaman {currentPage} / {totalPages}
+        </div>
 
-          <button
-            disabled={currentPage === totalPages}
-            onClick={handleNext}
-            className="px-4 py-2 bg-blue-900 text-white rounded-lg disabled:opacity-40"
-          >
-            Next
-          </button>
+        <button
+          disabled={currentPage === totalPages}
+          onClick={handleNext}
+          className="px-4 py-2 bg-blue-900 text-white rounded-lg disabled:opacity-40"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
