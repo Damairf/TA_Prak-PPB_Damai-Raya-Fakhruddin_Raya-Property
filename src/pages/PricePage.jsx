@@ -56,7 +56,7 @@ const PricePage = () => {
   return (
     <div className="md:pt-32 pt-8 md:pb-16 pb-24 px-5 md:px-20 bg-white">
       <h1 className="text-4xl md:text-5xl font-bold text-center md:mb-8 mb-6 text-blue-900">
-        Daftar Harga
+        Daftar Hunian
       </h1>
 
       <div className="flex justify-center mb-8">

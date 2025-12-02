@@ -57,7 +57,7 @@ const Navbar = () => {
                 to="/price"
                 className="hover:text-blue-600 transition-colors duration-300"
               >
-                Price
+                Residence
               </Link>
             </li>
 
