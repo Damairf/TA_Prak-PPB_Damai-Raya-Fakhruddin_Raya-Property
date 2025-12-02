@@ -85,7 +85,7 @@ const AdminPage = () => {
       if (error) throw error;
 
       alert("Hunian berhasil ditambahkan!");
-      navigate("/");
+      navigate("/admin");
     } catch (err) {
       console.error("Error:", err.message);
       alert("Gagal menambahkan hunian. Cek console.");
@@ -109,7 +109,7 @@ const AdminPage = () => {
         className="bg-white p-8 rounded-2xl shadow-xl max-w-3xl mx-auto"
       >
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/admin")}
           type="button"
           className="mb-8 bg-green-600 text-white px-5 py-2 rounded-xl hover:bg-green-700"
         >
@@ -261,14 +261,6 @@ const AdminPage = () => {
                      hover:bg-blue-700 active:scale-95 transition"
         >
           {loading ? "Menyimpan..." : "Tambahkan"}
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate("/admin/edit")}
-          className="w-full mt-4 bg-green-600 text-white font-semibold py-3 rounded-xl 
-             hover:bg-green-700 active:scale-95 transition"
-        >
-          Edit Hunian
         </button>
       </form>
     </div>

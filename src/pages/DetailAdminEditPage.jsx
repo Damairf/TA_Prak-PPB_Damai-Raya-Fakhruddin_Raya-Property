@@ -96,7 +96,7 @@ const DetailAdminEditPage = () => {
       console.error(error);
     } else {
       alert("Perubahan berhasil disimpan!");
-      navigate("/admin/edit");
+      navigate("/admin");
     }
   };
 
@@ -113,13 +113,13 @@ const DetailAdminEditPage = () => {
     await supabase.from("detail_price").delete().eq("id", id);
 
     alert("Data berhasil dihapus!");
-    navigate("/admin/edit");
+    navigate("/admin");
   };
 
   return (
     <div className="md:pt-28 pt-10 px-6 pb-20 max-w-3xl mx-auto">
       <button
-        onClick={() => navigate("/admin/edit")}
+        onClick={() => navigate("/admin")}
         type="button"
         className="mb-8 bg-green-600 text-white px-5 py-2 rounded-xl hover:bg-green-700"
       >

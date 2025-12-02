@@ -35,8 +35,8 @@ function App() {
           <Route path="/detail/:id" element={<DetailPage />} />
           <Route path="/detail-price/:id" element={<DetailPricePage />} />
           <Route path="/admin/tambah" element={<AdminPage />} />
-          <Route path="/admin/edit" element={<AdminEditPage />} />
-          <Route path="/admin/edit/:id" element={<DetailAdminEditPage />} />
+          <Route path="/admin" element={<AdminEditPage />} />
+          <Route path="/admin/:id" element={<DetailAdminEditPage />} />
         </Routes>
       </div>
 

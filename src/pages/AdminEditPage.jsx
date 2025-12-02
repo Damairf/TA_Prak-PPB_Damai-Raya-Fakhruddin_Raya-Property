@@ -98,7 +98,7 @@ const AdminEditPage = () => {
               <p className="text-gray-600 mb-4 truncate">{item.deskripsi}</p>
 
               <button
-                onClick={() => navigate(`/admin/edit/${item.id}`)}
+                onClick={() => navigate(`/admin/${item.id}`)}
                 className="w-full bg-blue-900 text-white py-2 rounded-lg font-semibold"
               >
                 Lihat Detail / Edit
