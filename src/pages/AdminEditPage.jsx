@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
+import LazyImage from "../components/LazyImage";
 
 const AdminEditPage = () => {
   const [list, setList] = useState([]);
@@ -107,8 +108,9 @@ const AdminEditPage = () => {
               key={item.id}
               className="border p-4 rounded-xl shadow hover:shadow-lg transition"
             >
-              <img
+              <LazyImage
                 src={item.image_url}
+                alt={item.nama}
                 className="w-full h-48 object-cover rounded-lg mb-3"
               />
               <h2 className="text-xl font-bold mb-2">{item.nama}</h2>

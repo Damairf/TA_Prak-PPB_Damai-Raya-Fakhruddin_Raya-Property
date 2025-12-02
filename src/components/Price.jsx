@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import LazyImage from "./LazyImage";
 
 const Price = ({ title, features, price, maxFeatures = 10, id, image_url }) => {
   const navigate = useNavigate();
@@ -10,9 +11,8 @@ const Price = ({ title, features, price, maxFeatures = 10, id, image_url }) => {
 
   return (
     <div className="bg-blue-900 text-white rounded-xl shadow-lg p-5 w-full md:w-[450px] h-full flex flex-col">
-
       <div className="w-full h-[230px] rounded-xl overflow-hidden">
-        <img
+        <LazyImage
           src={image_url}
           alt={title}
           className="w-full h-full object-cover"
