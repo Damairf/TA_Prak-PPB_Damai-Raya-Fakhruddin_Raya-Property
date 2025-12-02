@@ -35,8 +35,16 @@ const AdminEditPage = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentItems = filteredList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
   return (
-    <div className="md:pt-14 pt-10 px-6 pb-20">
+    <div className="md:pt-14 pt-10 px-6 pb-12">
 
       <h1 className="text-4xl font-bold text-center text-blue-900">
         Edit Data Hunian
@@ -110,42 +118,24 @@ const AdminEditPage = () => {
 
       <div className="flex justify-center mt-10 space-x-2">
         <button
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((p) => p - 1)}
-          className={`px-4 py-2 rounded-lg ${
-            currentPage === 1
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
-          }`}
-        >
-          Prev
-        </button>
-
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentPage(i + 1)}
-            className={`px-4 py-2 rounded-lg border ${
-              currentPage === i + 1
-                ? "bg-blue-600 text-white"
-                : "bg-white hover:bg-gray-200"
-            }`}
+            disabled={currentPage === 1}
+            onClick={handlePrev}
+            className="px-4 py-2 bg-blue-900 text-white rounded-lg disabled:opacity-40"
           >
-            {i + 1}
+            Prev
           </button>
-        ))}
 
-        <button
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((p) => p + 1)}
-          className={`px-4 py-2 rounded-lg ${
-            currentPage === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
-          }`}
-        >
-          Next
-        </button>
+          <div className="px-4 py-2 font-semibold">
+            Halaman {currentPage} / {totalPages}
+          </div>
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={handleNext}
+            className="px-4 py-2 bg-blue-900 text-white rounded-lg disabled:opacity-40"
+          >
+            Next
+          </button>
       </div>
     </div>
   );
