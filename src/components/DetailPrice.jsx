@@ -5,8 +5,24 @@ import { supabase } from "../supabaseClient";
 const DetailPrice = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [data, setData] = useState(null);
 
+  const [data, setData] = useState(null);
+  const [reviews, setReviews] = useState([]);
+
+  // form input
+  const [rating, setRating] = useState(0);
+  const [ulasan, setUlasan] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [page, setPage] = useState(1); // halaman aktif
+  const limit = 5; // jumlah ulasan per halaman
+  const [totalReviews, setTotalReviews] = useState(0);
+
+  const namaUser = localStorage.getItem("nama") || "Tamu";
+
+  // =========================
+  // Fetch detail hunian
+  // =========================
   useEffect(() => {
     const fetchDetail = async () => {
       const { data, error } = await supabase
@@ -22,6 +38,68 @@ const DetailPrice = () => {
     fetchDetail();
   }, [id]);
 
+  // =========================
+  // Fetch review
+  // =========================
+  const fetchReviews = async () => {
+    // Hitung total ulasan
+    const { count } = await supabase
+      .from("review")
+      .select("*", { count: "exact", head: true })
+      .eq("detail_id", id);
+
+    setTotalReviews(count || 0);
+
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    const { data, error } = await supabase
+      .from("review")
+      .select("*")
+      .eq("detail_id", id)
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (!error) setReviews(data);
+  };
+
+  useEffect(() => {
+    fetchReviews();
+  }, [page]);
+
+  // =========================
+  // Submit Review
+  // =========================
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (rating === 0 || ulasan.trim() === "")
+      return alert("Lengkapi rating dan ulasan!");
+
+    setLoading(true);
+
+    const { error } = await supabase.from("review").insert([
+      {
+        rating,
+        ulasan,
+        nama: namaUser,
+        detail_id: id,
+      },
+    ]);
+
+    setLoading(false);
+
+    if (error) {
+      console.error(error);
+      alert("Gagal mengirim ulasan");
+      return;
+    }
+
+    setRating(0);
+    setUlasan("");
+
+    fetchReviews();
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <button
@@ -31,6 +109,7 @@ const DetailPrice = () => {
         Kembali
       </button>
 
+      {/* FOTO */}
       <div className="bg-blue-900 p-4 rounded-2xl shadow-xl mb-6">
         <img
           src={data?.image_url}
@@ -39,6 +118,7 @@ const DetailPrice = () => {
         />
       </div>
 
+      {/* DETAIL */}
       <div className="text-black">
         <h2 className="text-2xl font-bold mb-3">{data?.nama}</h2>
 
@@ -57,6 +137,109 @@ const DetailPrice = () => {
 
         <h3 className="font-semibold text-xl mt-4 mb-2">Harga:</h3>
         <p className="text-yellow-600 text-xl font-bold">Rp. {data?.harga}</p>
+
+        {/* ========================== */}
+        {/* BAGIAN ULASAN */}
+        {/* ========================== */}
+        <div className="mt-10 p-6 bg-gray-100 rounded-xl shadow">
+          <h2 className="text-2xl font-bold mb-4">Ulasan</h2>
+
+          {/* Jika tidak ada ulasan */}
+          {reviews.length === 0 && (
+            <p className="text-gray-600 italic">
+              Belum ada ulasan untuk hunian ini.
+            </p>
+          )}
+
+          {/* List Ulasan */}
+          <div className="space-y-4 mb-8">
+            {reviews.map((r) => (
+              <div key={r.id} className="bg-white p-4 rounded-lg shadow border">
+                <p className="text-yellow-500 text-lg">
+                  {"★".repeat(r.rating)}
+                  {"☆".repeat(5 - r.rating)}
+                </p>
+                <p className="font-semibold">{r.nama}</p>
+                <p className="text-gray-700">{r.ulasan}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {totalReviews > limit && (
+            <div className="flex justify-center items-center gap-3 mt-4 mb-8">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className={`px-3 py-1 rounded-lg border ${
+                  page === 1
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-white hover:bg-gray-100"
+                }`}
+              >
+                Prev
+              </button>
+
+              <span className="font-semibold">
+                {page} / {Math.ceil(totalReviews / limit)}
+              </span>
+
+              <button
+                onClick={() =>
+                  setPage((p) =>
+                    Math.min(Math.ceil(totalReviews / limit), p + 1)
+                  )
+                }
+                disabled={page === Math.ceil(totalReviews / limit)}
+                className={`px-3 py-1 rounded-lg border ${
+                  page === Math.ceil(totalReviews / limit)
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-white hover:bg-gray-100"
+                }`}
+              >
+                Next
+              </button>
+            </div>
+          )}
+
+          {/* Form Tambah Ulasan */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="font-semibold">Rating:</label>
+              <div className="flex gap-2 mt-1">
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <button
+                    type="button"
+                    key={num}
+                    onClick={() => setRating(num)}
+                    className={`text-2xl ${
+                      rating >= num ? "text-yellow-500" : "text-gray-400"
+                    }`}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <textarea
+              className="w-full border p-3 rounded-lg"
+              placeholder="Tulis ulasan anda..."
+              value={ulasan}
+              onChange={(e) => setUlasan(e.target.value)}
+              rows={3}
+            ></textarea>
+
+            <button
+              disabled={loading}
+              className="bg-blue-900 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-blue-800 transition"
+            >
+              {loading ? "Mengirim..." : "Kirim Ulasan"}
+            </button>
+          </form>
+        </div>
+
+        {/* ========================== */}
       </div>
     </div>
   );

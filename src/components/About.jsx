@@ -1,10 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import waIcon from "../assets/wa.png";
 import mailIcon from "../assets/mail.png";
 import igIcon from "../assets/ig.png";
 import FotoProfile from "../assets/foto_profile.jpg";
 
 const About = () => {
+  const [nama, setNama] = useState("Damai Raya Fakhruddin");
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempNama, setTempNama] = useState("");
+
+  // 🔹 Ambil nama dari localStorage ketika halaman dibuka
+  useEffect(() => {
+    const saved = localStorage.getItem("nama");
+    if (saved) setNama(saved);
+  }, []);
+
+  // 🔹 Saat klik tombol Edit
+  const handleEdit = () => {
+    setTempNama(nama);
+    setIsEditing(true);
+  };
+
+  // 🔹 Simpan perubahan
+  const handleSave = () => {
+    setNama(tempNama);
+    localStorage.setItem("nama", tempNama);
+    setIsEditing(false);
+  };
+
+  // 🔹 Batalkan perubahan
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
   return (
     <div className="bg-blue-900 text-white py-16 px-6 md:px-20 md:pt-36 pt-10 md:pb-12 pb-24">
 
@@ -21,11 +49,51 @@ const About = () => {
         <div className="text-left">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Biodata</h2>
 
-          <p className="text-lg md:text-xl mb-2">
-            <span className="font-bold">Nama:</span> Damai Raya Fakhruddin
+          {/* 🔹 NAMA — editable */}
+          <p className="text-lg md:text-xl mb-2 flex items-center gap-3">
+            <span className="font-bold">Nama:</span>
+
+            {isEditing ? (
+              <input
+                type="text"
+                value={tempNama}
+                onChange={(e) => setTempNama(e.target.value)}
+                className="text-black px-2 py-1 rounded"
+              />
+            ) : (
+              <span>{nama}</span>
+            )}
           </p>
 
-          <p className="text-lg md:text-xl mb-2">
+          {/* 🔹 TOMBOL EDIT / SIMPAN */}
+          <div className="flex gap-3 mt-3">
+            {!isEditing ? (
+              <button
+                onClick={handleEdit}
+                className="bg-white text-blue-800 font-semibold px-4 py-1 rounded"
+              >
+                Edit
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={handleSave}
+                  className="bg-green-600 text-white font-semibold px-4 py-1 rounded"
+                >
+                  Simpan
+                </button>
+
+                <button
+                  onClick={handleCancel}
+                  className="bg-red-600 text-white font-semibold px-4 py-1 rounded"
+                >
+                  Batal
+                </button>
+              </>
+            )}
+          </div>
+
+          <p className="text-lg md:text-xl mb-2 mt-4">
             <span className="font-bold">NIM:</span> 21120123130096
           </p>
 
@@ -35,6 +103,7 @@ const About = () => {
         </div>
       </div>
 
+      {/* --- BAGIAN BAWAH TETAP --- */}
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
         
         <div>
@@ -99,7 +168,7 @@ const About = () => {
             </a>
 
             <a
-              href="https://www.instagram.com/damairf?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+              href="https://www.instagram.com/damairf"
               target="_blank"
               rel="noreferrer"
               className="flex items-center justify-between bg-white text-blue-800 px-4 py-3 rounded-xl shadow-md"
@@ -114,6 +183,7 @@ const About = () => {
           </div>
         </div>
       </div>
+
     </div>
   );
 };
