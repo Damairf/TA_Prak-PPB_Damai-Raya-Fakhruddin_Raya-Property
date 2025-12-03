@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
+import { useLocation } from "react-router-dom";
 
 const DetailPrice = () => {
   const { id } = useParams();
@@ -8,6 +9,9 @@ const DetailPrice = () => {
 
   const [data, setData] = useState(null);
   const [reviews, setReviews] = useState([]);
+
+  const location = useLocation();
+  const fromHome = location.state?.fromHome || false;
 
   const [rating, setRating] = useState(0);
   const [ulasan, setUlasan] = useState("");
@@ -35,7 +39,6 @@ const DetailPrice = () => {
   }, [id]);
 
   const fetchReviews = async () => {
-
     const { count } = await supabase
       .from("review")
       .select("*", { count: "exact", head: true })
@@ -93,7 +96,7 @@ const DetailPrice = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <button
-        onClick={() => navigate("/price")}
+        onClick={() => navigate(fromHome ? "/" : "/price")}
         className="mb-4 bg-blue-900 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-blue-800 transition"
       >
         Kembali
@@ -221,7 +224,6 @@ const DetailPrice = () => {
             </button>
           </form>
         </div>
-
       </div>
     </div>
   );

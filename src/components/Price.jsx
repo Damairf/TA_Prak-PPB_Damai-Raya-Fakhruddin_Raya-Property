@@ -9,6 +9,7 @@ const Price = ({
   id,
   image_url,
   averageRating,
+  fromHome
 }) => {
   const navigate = useNavigate();
 
@@ -49,7 +50,11 @@ const Price = ({
       </p>
 
       <button
-        onClick={() => navigate(`/detail-price/${id}`)}
+        onClick={() =>
+          navigate(`/detail-price/${id}`, {
+            state: { fromHome }
+          })
+        }
         className="mt-5 bg-white text-blue-900 font-semibold py-2 rounded-lg 
                    hover:bg-gray-200 active:scale-95 transition"
       >

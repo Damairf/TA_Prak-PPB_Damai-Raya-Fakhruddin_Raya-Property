@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { supabase } from "../supabaseClient";
+import Price from "../components/Price";
 import Banner from "../assets/Banner_Ryon_Property.png";
 import Background1 from "../assets/Background1.png";
 import Background2 from "../assets/Background2.png";
@@ -6,6 +8,8 @@ import Background3 from "../assets/Background3.png";
 
 const Hero = () => {
   const backgrounds = [Background1, Background2, Background3];
+  const [topHouses, setTopHouses] = useState([]);
+  const [ratingMap, setRatingMap] = useState({});
   const [currentBg, setCurrentBg] = useState(0);
   const [nextBg, setNextBg] = useState(1);
   const [isSliding, setIsSliding] = useState(false);
@@ -24,9 +28,55 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, [backgrounds.length]);
 
+  useEffect(() => {
+    const fetchTopRated = async () => {
+      const { data: houses, error: err1 } = await supabase
+        .from("detail_price")
+        .select("*");
+
+      if (err1) {
+        console.error("Error fetching houses:", err1);
+        return;
+      }
+
+      const { data: reviews, error: err2 } = await supabase
+        .from("review")
+        .select("detail_id, rating");
+
+      if (err2) {
+        console.error("Error fetching ratings:", err2);
+        return;
+      }
+
+      const temp = {};
+      reviews.forEach((r) => {
+        if (!temp[r.detail_id]) temp[r.detail_id] = [];
+        temp[r.detail_id].push(r.rating);
+      });
+
+      const avgMap = {};
+      Object.keys(temp).forEach((id) => {
+        const arr = temp[id];
+        const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
+        avgMap[id] = avg.toFixed(1);
+      });
+
+      setRatingMap(avgMap);
+
+      const sorted = [...houses].sort((a, b) => {
+        const ratingA = parseFloat(avgMap[a.id] || 0);
+        const ratingB = parseFloat(avgMap[b.id] || 0);
+        return ratingB - ratingA;
+      });
+
+      setTopHouses(sorted.slice(0, 3));
+    };
+
+    fetchTopRated();
+  }, []);
+
   return (
     <>
-
       <div
         id="home"
         className="
@@ -35,7 +85,6 @@ const Hero = () => {
     md:h-[700px]
   "
       >
-
         <div
           className={`absolute inset-0 ${
             isSliding ? "transition-transform duration-1000 ease-in-out" : ""
@@ -126,6 +175,34 @@ const Hero = () => {
               pengalaman yang terbaik.
             </p>
           </div>
+        </div>
+      </div>
+      <div className="px-6 mt-16 mb-24">
+        <h2 className="text-3xl md:text-4xl font-bold text-center text-blue-900 mb-10">
+          Hunian Rating Tertinggi
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 place-items-center">
+          {topHouses.length > 0 ? (
+            topHouses.map((house) => (
+              <Price
+                key={house.id}
+                id={house.id}
+                title={house.nama}
+                image_url={house.image_url}
+                price={house.harga}
+                deskripsi={house.deskripsi}
+                maxFeatures={9}
+                features={house.fasilitas || []}
+                averageRating={ratingMap[house.id] || 0}
+                fromHome={true}
+              />
+            ))
+          ) : (
+            <p className="text-gray-600 text-center mt-5">
+              Belum ada data rating.
+            </p>
+          )}
         </div>
       </div>
     </>
