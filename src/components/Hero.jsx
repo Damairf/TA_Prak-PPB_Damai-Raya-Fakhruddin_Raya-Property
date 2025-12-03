@@ -182,7 +182,7 @@ const Hero = () => {
           Hunian Rating Tertinggi
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 place-items-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 md:gap-0 gap-10 place-items-center">
           {topHouses.length > 0 ? (
             topHouses.map((house) => (
               <Price
