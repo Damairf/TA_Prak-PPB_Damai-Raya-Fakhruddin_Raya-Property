@@ -1,7 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import LazyImage from "./LazyImage";
 
-const Price = ({ title, features, price, maxFeatures = 10, id, image_url }) => {
+const Price = ({
+  title,
+  features,
+  price,
+  maxFeatures = 10,
+  id,
+  image_url,
+  averageRating,
+}) => {
   const navigate = useNavigate();
 
   const normalizedFeatures = [
@@ -19,7 +27,14 @@ const Price = ({ title, features, price, maxFeatures = 10, id, image_url }) => {
         />
       </div>
 
-      <h2 className="text-2xl font-bold mt-4">{title}</h2>
+      <div className="flex items-center gap-2 mt-3">
+        <span className="text-yellow-300 text-3xl">★</span>
+        <span className="text-white font-semibold text-lg">
+          {averageRating ? averageRating : "0"}
+        </span>
+      </div>
+
+      <h2 className="text-2xl font-bold mt-1">{title}</h2>
 
       <ul className="mt-3 space-y-1 flex-grow min-h-[260px]">
         {normalizedFeatures.map((item, index) => (

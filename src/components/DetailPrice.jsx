@@ -9,20 +9,16 @@ const DetailPrice = () => {
   const [data, setData] = useState(null);
   const [reviews, setReviews] = useState([]);
 
-  // form input
   const [rating, setRating] = useState(0);
   const [ulasan, setUlasan] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [page, setPage] = useState(1); // halaman aktif
-  const limit = 5; // jumlah ulasan per halaman
+  const [page, setPage] = useState(1);
+  const limit = 5;
   const [totalReviews, setTotalReviews] = useState(0);
 
   const namaUser = localStorage.getItem("nama") || "Tamu";
 
-  // =========================
-  // Fetch detail hunian
-  // =========================
   useEffect(() => {
     const fetchDetail = async () => {
       const { data, error } = await supabase
@@ -38,11 +34,8 @@ const DetailPrice = () => {
     fetchDetail();
   }, [id]);
 
-  // =========================
-  // Fetch review
-  // =========================
   const fetchReviews = async () => {
-    // Hitung total ulasan
+
     const { count } = await supabase
       .from("review")
       .select("*", { count: "exact", head: true })
@@ -67,9 +60,6 @@ const DetailPrice = () => {
     fetchReviews();
   }, [page]);
 
-  // =========================
-  // Submit Review
-  // =========================
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (rating === 0 || ulasan.trim() === "")
@@ -138,20 +128,15 @@ const DetailPrice = () => {
         <h3 className="font-semibold text-xl mt-4 mb-2">Harga:</h3>
         <p className="text-yellow-600 text-xl font-bold">Rp. {data?.harga}</p>
 
-        {/* ========================== */}
-        {/* BAGIAN ULASAN */}
-        {/* ========================== */}
         <div className="mt-10 p-6 bg-gray-100 rounded-xl shadow">
           <h2 className="text-2xl font-bold mb-4">Ulasan</h2>
 
-          {/* Jika tidak ada ulasan */}
           {reviews.length === 0 && (
             <p className="text-gray-600 italic">
               Belum ada ulasan untuk hunian ini.
             </p>
           )}
 
-          {/* List Ulasan */}
           <div className="space-y-4 mb-8">
             {reviews.map((r) => (
               <div key={r.id} className="bg-white p-4 rounded-lg shadow border">
@@ -165,7 +150,6 @@ const DetailPrice = () => {
             ))}
           </div>
 
-          {/* Pagination */}
           {totalReviews > limit && (
             <div className="flex justify-center items-center gap-3 mt-4 mb-8">
               <button
@@ -202,7 +186,6 @@ const DetailPrice = () => {
             </div>
           )}
 
-          {/* Form Tambah Ulasan */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="font-semibold">Rating:</label>
@@ -239,7 +222,6 @@ const DetailPrice = () => {
           </form>
         </div>
 
-        {/* ========================== */}
       </div>
     </div>
   );

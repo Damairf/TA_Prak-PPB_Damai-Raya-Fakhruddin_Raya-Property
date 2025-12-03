@@ -5,6 +5,7 @@ import { supabase } from "../supabaseClient";
 const PricePage = () => {
   const [paketList, setPaketList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [ratingMap, setRatingMap] = useState({});
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
@@ -28,9 +29,42 @@ const PricePage = () => {
   }, []);
 
   useEffect(() => {
+    const fetchRatings = async () => {
+      const { data, error } = await supabase
+        .from("review")
+        .select("detail_id, rating");
+
+      if (error) {
+        console.error("Error fetching rating:", error);
+        return;
+      }
+
+      const tempMap = {};
+
+      data.forEach((r) => {
+        if (!tempMap[r.detail_id]) {
+          tempMap[r.detail_id] = [];
+        }
+        tempMap[r.detail_id].push(r.rating);
+      });
+
+      const avgMap = {};
+      Object.keys(tempMap).forEach((id) => {
+        const arr = tempMap[id];
+        const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
+        avgMap[id] = avg.toFixed(1);
+      });
+
+      setRatingMap(avgMap);
+    };
+
+    fetchRatings();
+  }, []);
+
+  useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: "instant"
+      behavior: "instant",
     });
   }, [currentPage]);
 
@@ -88,6 +122,7 @@ const PricePage = () => {
               deskripsi={paket.deskripsi}
               maxFeatures={9}
               features={paket.fasilitas || []}
+              averageRating={ratingMap[paket.id] || 0}
             />
           ))
         ) : (
