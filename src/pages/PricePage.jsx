@@ -6,6 +6,7 @@ const PricePage = () => {
   const [paketList, setPaketList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [ratingMap, setRatingMap] = useState({});
+  const [sortByRating, setSortByRating] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
@@ -70,9 +71,17 @@ const PricePage = () => {
 
   if (paketList.length === 0) return null;
 
-  const filteredPaket = paketList.filter((p) =>
+  let filteredPaket = paketList.filter((p) =>
     p.nama.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (sortByRating) {
+    filteredPaket = filteredPaket.sort((a, b) => {
+      const ratingA = parseFloat(ratingMap[a.id] || 0);
+      const ratingB = parseFloat(ratingMap[b.id] || 0);
+      return ratingB - ratingA;
+    });
+  }
 
   const totalPages = Math.ceil(filteredPaket.length / itemsPerPage);
   const indexStart = (currentPage - 1) * itemsPerPage;
@@ -93,7 +102,7 @@ const PricePage = () => {
         Daftar Hunian
       </h1>
 
-      <div className="flex justify-center mb-8">
+      <div className="flex justify-center mb-8 gap-3">
         <input
           type="text"
           placeholder="Cari hunian..."
@@ -103,11 +112,21 @@ const PricePage = () => {
             setCurrentPage(1);
           }}
           className="
-            w-full max-w-3xl p-3 rounded-xl text-black 
-            outline-none border border-gray-400 
-            focus:border-blue-400 focus:ring-2 focus:ring-blue-300
-          "
+      w-full max-w-3xl p-3 rounded-xl text-black 
+      outline-none border border-gray-400 
+      focus:border-blue-400 focus:ring-2 focus:ring-blue-300
+    "
         />
+
+        <button
+          onClick={() => setSortByRating((prev) => !prev)}
+          className={`
+      px-4 py-2 rounded-xl font-semibold transition
+      ${sortByRating ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-700"}
+    `}
+        >
+          Tertinggi
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 place-items-center">
